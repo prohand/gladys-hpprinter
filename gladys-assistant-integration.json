@@ -8,13 +8,18 @@
     "de": "Verfolge Tinten- und Tonerstände, Zustand, Warnungen und Seitenzahl deiner HP-Drucker.",
     "es": "Siga los niveles de tinta y tóner, el estado, las alertas y las páginas de sus impresoras HP."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/prohand/gladys-hpprinter:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/prohand/gladys-hpprinter:1.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-hpprinter/main/cover.png",
   "categories": ["appliances", "network"],
   "transports": ["local"],
-  "network_discovery": [{ "type": "mdns", "service": "_ipp._tcp" }],
+  "network_discovery": [
+    {
+      "type": "mdns",
+      "service": "_ipp._tcp"
+    }
+  ],
   "config_schema": [
     {
       "key": "intro",
@@ -145,19 +150,39 @@
       "options": [
         {
           "value": "en",
-          "label": { "en": "English", "fr": "English", "de": "English", "es": "English" }
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
         },
         {
           "value": "fr",
-          "label": { "en": "Français", "fr": "Français", "de": "Français", "es": "Français" }
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
         },
         {
           "value": "de",
-          "label": { "en": "Deutsch", "fr": "Deutsch", "de": "Deutsch", "es": "Deutsch" }
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
         },
         {
           "value": "es",
-          "label": { "en": "Español", "fr": "Español", "de": "Español", "es": "Español" }
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
         }
       ]
     },
@@ -227,7 +252,12 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          },
           "required": true
         }
       ]
@@ -253,28 +283,58 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          }
         },
         {
           "key": "color",
           "type": "multi_select",
-          "label": { "en": "Colour", "fr": "Couleur", "de": "Farbe", "es": "Color" },
+          "label": {
+            "en": "Colour",
+            "fr": "Couleur",
+            "de": "Farbe",
+            "es": "Color"
+          },
           "options": [
             {
               "value": "black",
-              "label": { "en": "Black", "fr": "Noir", "de": "Schwarz", "es": "Negro" }
+              "label": {
+                "en": "Black",
+                "fr": "Noir",
+                "de": "Schwarz",
+                "es": "Negro"
+              }
             },
             {
               "value": "cyan",
-              "label": { "en": "Cyan", "fr": "Cyan", "de": "Cyan", "es": "Cian" }
+              "label": {
+                "en": "Cyan",
+                "fr": "Cyan",
+                "de": "Cyan",
+                "es": "Cian"
+              }
             },
             {
               "value": "magenta",
-              "label": { "en": "Magenta", "fr": "Magenta", "de": "Magenta", "es": "Magenta" }
+              "label": {
+                "en": "Magenta",
+                "fr": "Magenta",
+                "de": "Magenta",
+                "es": "Magenta"
+              }
             },
             {
               "value": "yellow",
-              "label": { "en": "Yellow", "fr": "Jaune", "de": "Gelb", "es": "Amarillo" }
+              "label": {
+                "en": "Yellow",
+                "fr": "Jaune",
+                "de": "Gelb",
+                "es": "Amarillo"
+              }
             },
             {
               "value": "tri-color",
@@ -287,7 +347,12 @@
             },
             {
               "value": "other",
-              "label": { "en": "Other", "fr": "Autre", "de": "Andere", "es": "Otro" }
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Andere",
+                "es": "Otro"
+              }
             }
           ]
         }
@@ -296,17 +361,32 @@
         {
           "key": "supply",
           "type": "string",
-          "label": { "en": "Cartridge", "fr": "Cartouche", "de": "Patrone", "es": "Cartucho" }
+          "label": {
+            "en": "Cartridge",
+            "fr": "Cartouche",
+            "de": "Patrone",
+            "es": "Cartucho"
+          }
         },
         {
           "key": "color",
           "type": "string",
-          "label": { "en": "Colour", "fr": "Couleur", "de": "Farbe", "es": "Color" }
+          "label": {
+            "en": "Colour",
+            "fr": "Couleur",
+            "de": "Farbe",
+            "es": "Color"
+          }
         },
         {
           "key": "level",
           "type": "number",
-          "label": { "en": "Level (%)", "fr": "Niveau (%)", "de": "Stand (%)", "es": "Nivel (%)" }
+          "label": {
+            "en": "Level (%)",
+            "fr": "Niveau (%)",
+            "de": "Stand (%)",
+            "es": "Nivel (%)"
+          }
         }
       ]
     },
@@ -329,12 +409,22 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          }
         },
         {
           "key": "problem",
           "type": "multi_select",
-          "label": { "en": "Problem", "fr": "Problème", "de": "Problem", "es": "Problema" },
+          "label": {
+            "en": "Problem",
+            "fr": "Problème",
+            "de": "Problem",
+            "es": "Problema"
+          },
           "options": [
             {
               "value": "paper_out",
@@ -406,7 +496,12 @@
         {
           "key": "problem",
           "type": "string",
-          "label": { "en": "Problem", "fr": "Problème", "de": "Problem", "es": "Problema" }
+          "label": {
+            "en": "Problem",
+            "fr": "Problème",
+            "de": "Problem",
+            "es": "Problema"
+          }
         },
         {
           "key": "label",
@@ -439,7 +534,12 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          }
         }
       ],
       "variables": [
@@ -477,7 +577,12 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          },
           "required": true
         }
       ],
@@ -485,7 +590,12 @@
         {
           "key": "reachable",
           "type": "boolean",
-          "label": { "en": "Answers", "fr": "Répond", "de": "Antwortet", "es": "Responde" }
+          "label": {
+            "en": "Answers",
+            "fr": "Répond",
+            "de": "Antwortet",
+            "es": "Responde"
+          }
         },
         {
           "key": "state",
@@ -500,7 +610,12 @@
         {
           "key": "alerts",
           "type": "string",
-          "label": { "en": "Alerts", "fr": "Alertes", "de": "Warnungen", "es": "Alertas" }
+          "label": {
+            "en": "Alerts",
+            "fr": "Alertes",
+            "de": "Warnungen",
+            "es": "Alertas"
+          }
         },
         {
           "key": "lowest_level",
@@ -544,18 +659,33 @@
           "key": "device",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          },
           "required": true
         },
         {
           "key": "title",
           "type": "string",
-          "label": { "en": "Title", "fr": "Titre", "de": "Titel", "es": "Título" }
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
         },
         {
           "key": "text",
           "type": "string",
-          "label": { "en": "Text", "fr": "Texte", "de": "Text", "es": "Texto" },
+          "label": {
+            "en": "Text",
+            "fr": "Texte",
+            "de": "Text",
+            "es": "Texto"
+          },
           "required": true
         }
       ],
@@ -563,7 +693,12 @@
         {
           "key": "printed",
           "type": "boolean",
-          "label": { "en": "Printed", "fr": "Imprimé", "de": "Gedruckt", "es": "Impreso" }
+          "label": {
+            "en": "Printed",
+            "fr": "Imprimé",
+            "de": "Gedruckt",
+            "es": "Impreso"
+          }
         },
         {
           "key": "job_id",
@@ -599,7 +734,12 @@
           "key": "printer",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "label": {
+            "en": "Printer",
+            "fr": "Imprimante",
+            "de": "Drucker",
+            "es": "Impresora"
+          },
           "required": true
         }
       ],

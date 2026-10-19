@@ -1,6 +1,6 @@
 {
   "name": "gladys-hpprinter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Gladys Assistant external integration for HP printers: ink and toner levels, state, alerts, pages printed.",
   "type": "module",
