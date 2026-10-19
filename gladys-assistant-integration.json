@@ -1,0 +1,626 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "HP Printer",
+  "description": {
+    "en": "Follow the ink and toner levels, state, alerts and page count of your HP printers.",
+    "fr": "Suivez niveaux d'encre et de toner, état, alertes et pages de vos imprimantes HP.",
+    "de": "Verfolge Tinten- und Tonerstände, Zustand, Warnungen und Seitenzahl deiner HP-Drucker.",
+    "es": "Siga los niveles de tinta y tóner, el estado, las alertas y las páginas de sus impresoras HP."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-hpprinter:1.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-hpprinter/main/cover.png",
+  "categories": ["appliances", "network"],
+  "transports": ["local"],
+  "network_discovery": [{ "type": "mdns", "service": "_ipp._tcp" }],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "The integration reads your HP printers on the local network (IPP, port 631): nothing to install, no HP account. Printers are found automatically; if one is missing, type its IP address below. Then add the printers from the Discovery tab.",
+        "fr": "L'intégration lit vos imprimantes HP sur le réseau local (IPP, port 631) : rien à installer, pas de compte HP. Les imprimantes sont trouvées automatiquement ; s'il en manque une, saisissez son adresse IP ci-dessous. Ajoutez ensuite les imprimantes depuis l'onglet Découverte.",
+        "de": "Die Integration liest deine HP-Drucker im lokalen Netzwerk (IPP, Port 631): nichts zu installieren, kein HP-Konto. Drucker werden automatisch gefunden; fehlt einer, gib unten seine IP-Adresse ein. Füge die Drucker dann im Tab „Erkennung“ hinzu.",
+        "es": "La integración lee sus impresoras HP en la red local (IPP, puerto 631): nada que instalar, sin cuenta HP. Las impresoras se detectan solas; si falta alguna, escriba su dirección IP abajo. Después añada las impresoras desde la pestaña Descubrimiento."
+      },
+      "links": [
+        {
+          "url": "https://github.com/prohand/gladys-hpprinter/blob/main/docs/en.md",
+          "label": {
+            "en": "Integration documentation",
+            "fr": "Documentation de l'intégration",
+            "de": "Dokumentation der Integration",
+            "es": "Documentación de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "printers",
+      "type": "string",
+      "label": {
+        "en": "Printer addresses",
+        "fr": "Adresses des imprimantes",
+        "de": "Druckeradressen",
+        "es": "Direcciones de las impresoras"
+      },
+      "description": {
+        "en": "Optional. IP addresses or host names, separated by commas. An IPP address (ipp://host:631/ipp/print) works too.",
+        "fr": "Facultatif. Adresses IP ou noms d'hôte, séparés par des virgules. Une adresse IPP (ipp://hote:631/ipp/print) marche aussi.",
+        "de": "Optional. IP-Adressen oder Hostnamen, durch Kommas getrennt. Eine IPP-Adresse (ipp://host:631/ipp/print) geht auch.",
+        "es": "Opcional. Direcciones IP o nombres de host, separados por comas. Una dirección IPP (ipp://host:631/ipp/print) también vale."
+      },
+      "placeholder": {
+        "en": "e.g. 192.168.1.20, 192.168.1.21",
+        "fr": "ex. 192.168.1.20, 192.168.1.21",
+        "de": "z. B. 192.168.1.20, 192.168.1.21",
+        "es": "p. ej. 192.168.1.20, 192.168.1.21"
+      },
+      "required": false,
+      "default": ""
+    },
+    {
+      "key": "auto_discovery",
+      "type": "boolean",
+      "label": {
+        "en": "Find HP printers automatically",
+        "fr": "Trouver les imprimantes HP automatiquement",
+        "de": "HP-Drucker automatisch finden",
+        "es": "Detectar las impresoras HP automáticamente"
+      },
+      "description": {
+        "en": "Search the local network for HP printers (mDNS, the way computers find them).",
+        "fr": "Cherche les imprimantes HP sur le réseau local (mDNS, comme le font les ordinateurs).",
+        "de": "Sucht HP-Drucker im lokalen Netzwerk (mDNS, wie Computer sie finden).",
+        "es": "Busca impresoras HP en la red local (mDNS, como lo hacen los ordenadores)."
+      },
+      "required": false,
+      "default": true
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often each printer is read, in seconds (one minute minimum).",
+        "fr": "Fréquence de lecture de chaque imprimante, en secondes (une minute minimum).",
+        "de": "Wie oft jeder Drucker gelesen wird, in Sekunden (mindestens eine Minute).",
+        "es": "Cada cuánto se lee cada impresora, en segundos (un minuto como mínimo)."
+      },
+      "required": false,
+      "default": 300,
+      "min": 60,
+      "max": 3600
+    },
+    {
+      "key": "low_level_threshold",
+      "type": "number",
+      "label": {
+        "en": "Low level threshold (%)",
+        "fr": "Seuil de niveau bas (%)",
+        "de": "Schwelle für niedrigen Stand (%)",
+        "es": "Umbral de nivel bajo (%)"
+      },
+      "description": {
+        "en": "A cartridge at or under this level fires the \"Ink or toner low\" scene trigger.",
+        "fr": "Une cartouche à ce niveau ou en dessous déclenche le déclencheur de scène « Encre ou toner bas ».",
+        "de": "Eine Patrone auf oder unter diesem Stand löst den Szenen-Auslöser „Tinte oder Toner niedrig“ aus.",
+        "es": "Un cartucho en este nivel o por debajo activa el disparador de escena «Tinta o tóner bajo»."
+      },
+      "required": false,
+      "default": 15,
+      "min": 1,
+      "max": 50
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the device states",
+        "fr": "Langue des états des appareils",
+        "de": "Sprache der Gerätezustände",
+        "es": "Idioma de los estados de los dispositivos"
+      },
+      "description": {
+        "en": "Language of the state and alerts texts, and of the feature names of new devices.",
+        "fr": "Langue des textes d'état et d'alertes, et des noms de fonctionnalités des nouveaux appareils.",
+        "de": "Sprache der Zustands- und Warntexte sowie der Funktionsnamen neuer Geräte.",
+        "es": "Idioma de los textos de estado y alertas, y de los nombres de funciones de los nuevos dispositivos."
+      },
+      "required": false,
+      "default": "en",
+      "options": [
+        {
+          "value": "en",
+          "label": { "en": "English", "fr": "English", "de": "English", "es": "English" }
+        },
+        {
+          "value": "fr",
+          "label": { "en": "Français", "fr": "Français", "de": "Français", "es": "Français" }
+        },
+        {
+          "value": "de",
+          "label": { "en": "Deutsch", "fr": "Deutsch", "de": "Deutsch", "es": "Deutsch" }
+        },
+        {
+          "value": "es",
+          "label": { "en": "Español", "fr": "Español", "de": "Español", "es": "Español" }
+        }
+      ]
+    },
+    {
+      "key": "debug_logs",
+      "type": "boolean",
+      "label": {
+        "en": "Detailed logs",
+        "fr": "Logs détaillés",
+        "de": "Ausführliche Logs",
+        "es": "Registros detallados"
+      },
+      "description": {
+        "en": "Log what each printer answers. Turn it off once the problem is found.",
+        "fr": "Journalise ce que répond chaque imprimante. À désactiver une fois le problème trouvé.",
+        "de": "Protokolliert, was jeder Drucker antwortet. Nach der Fehlersuche wieder ausschalten.",
+        "es": "Registra lo que responde cada impresora. Desactívelo cuando encuentre el problema."
+      },
+      "required": false,
+      "default": false
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the printers",
+        "fr": "Tester les imprimantes",
+        "de": "Drucker testen",
+        "es": "Probar las impresoras"
+      },
+      "description": {
+        "en": "Read every printer now and show what answered.",
+        "fr": "Lit chaque imprimante maintenant et montre ce qui a répondu.",
+        "de": "Liest jetzt jeden Drucker und zeigt, was geantwortet hat.",
+        "es": "Lee ahora cada impresora y muestra cuáles respondieron."
+      },
+      "timeout_seconds": 30
+    },
+    {
+      "key": "discover_printers",
+      "label": {
+        "en": "Search for printers",
+        "fr": "Rechercher les imprimantes",
+        "de": "Drucker suchen",
+        "es": "Buscar impresoras"
+      },
+      "description": {
+        "en": "Search the local network for HP printers.",
+        "fr": "Cherche les imprimantes HP sur le réseau local.",
+        "de": "Sucht HP-Drucker im lokalen Netzwerk.",
+        "es": "Busca impresoras HP en la red local."
+      },
+      "timeout_seconds": 45
+    },
+    {
+      "key": "print_test_page",
+      "label": {
+        "en": "Print a test page",
+        "fr": "Imprimer une page de test",
+        "de": "Testseite drucken",
+        "es": "Imprimir una página de prueba"
+      },
+      "timeout_seconds": 45,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "required": true
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "supply_low",
+      "label": {
+        "en": "Ink or toner low",
+        "fr": "Encre ou toner bas",
+        "de": "Tinte oder Toner niedrig",
+        "es": "Tinta o tóner bajo"
+      },
+      "description": {
+        "en": "A cartridge went under the threshold set in the configuration.",
+        "fr": "Une cartouche est passée sous le seuil réglé dans la configuration.",
+        "de": "Eine Patrone ist unter die in der Konfiguration gesetzte Schwelle gefallen.",
+        "es": "Un cartucho bajó del umbral fijado en la configuración."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+        },
+        {
+          "key": "color",
+          "type": "multi_select",
+          "label": { "en": "Colour", "fr": "Couleur", "de": "Farbe", "es": "Color" },
+          "options": [
+            {
+              "value": "black",
+              "label": { "en": "Black", "fr": "Noir", "de": "Schwarz", "es": "Negro" }
+            },
+            {
+              "value": "cyan",
+              "label": { "en": "Cyan", "fr": "Cyan", "de": "Cyan", "es": "Cian" }
+            },
+            {
+              "value": "magenta",
+              "label": { "en": "Magenta", "fr": "Magenta", "de": "Magenta", "es": "Magenta" }
+            },
+            {
+              "value": "yellow",
+              "label": { "en": "Yellow", "fr": "Jaune", "de": "Gelb", "es": "Amarillo" }
+            },
+            {
+              "value": "tri-color",
+              "label": {
+                "en": "Tri-colour",
+                "fr": "Trois couleurs",
+                "de": "Dreifarbig",
+                "es": "Tricolor"
+              }
+            },
+            {
+              "value": "other",
+              "label": { "en": "Other", "fr": "Autre", "de": "Andere", "es": "Otro" }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "supply",
+          "type": "string",
+          "label": { "en": "Cartridge", "fr": "Cartouche", "de": "Patrone", "es": "Cartucho" }
+        },
+        {
+          "key": "color",
+          "type": "string",
+          "label": { "en": "Colour", "fr": "Couleur", "de": "Farbe", "es": "Color" }
+        },
+        {
+          "key": "level",
+          "type": "number",
+          "label": { "en": "Level (%)", "fr": "Niveau (%)", "de": "Stand (%)", "es": "Nivel (%)" }
+        }
+      ]
+    },
+    {
+      "key": "printer_problem",
+      "label": {
+        "en": "Printer problem",
+        "fr": "Problème d'imprimante",
+        "de": "Druckerproblem",
+        "es": "Problema de impresora"
+      },
+      "description": {
+        "en": "Out of paper, paper jam, door open, cartridge empty...",
+        "fr": "Plus de papier, bourrage, capot ouvert, cartouche vide...",
+        "de": "Kein Papier, Papierstau, Klappe offen, Patrone leer...",
+        "es": "Sin papel, atasco, tapa abierta, cartucho vacío..."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+        },
+        {
+          "key": "problem",
+          "type": "multi_select",
+          "label": { "en": "Problem", "fr": "Problème", "de": "Problem", "es": "Problema" },
+          "options": [
+            {
+              "value": "paper_out",
+              "label": {
+                "en": "Out of paper",
+                "fr": "Plus de papier",
+                "de": "Kein Papier",
+                "es": "Sin papel"
+              }
+            },
+            {
+              "value": "paper_jam",
+              "label": {
+                "en": "Paper jam",
+                "fr": "Bourrage papier",
+                "de": "Papierstau",
+                "es": "Atasco de papel"
+              }
+            },
+            {
+              "value": "door_open",
+              "label": {
+                "en": "Door open",
+                "fr": "Capot ouvert",
+                "de": "Klappe offen",
+                "es": "Tapa abierta"
+              }
+            },
+            {
+              "value": "supply_problem",
+              "label": {
+                "en": "Cartridge empty or missing",
+                "fr": "Cartouche vide ou absente",
+                "de": "Patrone leer oder fehlt",
+                "es": "Cartucho vacío o ausente"
+              }
+            },
+            {
+              "value": "output_full",
+              "label": {
+                "en": "Output tray full",
+                "fr": "Bac de sortie plein",
+                "de": "Ausgabefach voll",
+                "es": "Bandeja de salida llena"
+              }
+            },
+            {
+              "value": "tray_missing",
+              "label": {
+                "en": "Paper tray missing",
+                "fr": "Bac papier absent",
+                "de": "Papierfach fehlt",
+                "es": "Falta la bandeja"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other error",
+                "fr": "Autre erreur",
+                "de": "Anderer Fehler",
+                "es": "Otro error"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "problem",
+          "type": "string",
+          "label": { "en": "Problem", "fr": "Problème", "de": "Problem", "es": "Problema" }
+        },
+        {
+          "key": "label",
+          "type": "string",
+          "label": {
+            "en": "Problem (text)",
+            "fr": "Problème (texte)",
+            "de": "Problem (Text)",
+            "es": "Problema (texto)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "printer_unreachable",
+      "label": {
+        "en": "Printer unreachable",
+        "fr": "Imprimante injoignable",
+        "de": "Drucker nicht erreichbar",
+        "es": "Impresora inaccesible"
+      },
+      "description": {
+        "en": "The printer stopped answering (switched off, unplugged, off the network).",
+        "fr": "L'imprimante ne répond plus (éteinte, débranchée, hors réseau).",
+        "de": "Der Drucker antwortet nicht mehr (aus, ausgesteckt, nicht im Netz).",
+        "es": "La impresora dejó de responder (apagada, desenchufada, fuera de la red)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" }
+        }
+      ],
+      "variables": [
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Printer name",
+            "fr": "Nom de l'imprimante",
+            "de": "Druckername",
+            "es": "Nombre de la impresora"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "refresh_printer",
+      "label": {
+        "en": "Read a printer",
+        "fr": "Lire une imprimante",
+        "de": "Drucker lesen",
+        "es": "Leer una impresora"
+      },
+      "description": {
+        "en": "Read the printer now and give its state and levels to the next actions.",
+        "fr": "Lit l'imprimante maintenant et donne son état et ses niveaux aux actions suivantes.",
+        "de": "Liest den Drucker jetzt und gibt Zustand und Stände an die nächsten Aktionen.",
+        "es": "Lee la impresora ahora y pasa su estado y niveles a las acciones siguientes."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "reachable",
+          "type": "boolean",
+          "label": { "en": "Answers", "fr": "Répond", "de": "Antwortet", "es": "Responde" }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "State (idle, printing, stopped, offline)",
+            "fr": "État (idle, printing, stopped, offline)",
+            "de": "Zustand (idle, printing, stopped, offline)",
+            "es": "Estado (idle, printing, stopped, offline)"
+          }
+        },
+        {
+          "key": "alerts",
+          "type": "string",
+          "label": { "en": "Alerts", "fr": "Alertes", "de": "Warnungen", "es": "Alertas" }
+        },
+        {
+          "key": "lowest_level",
+          "type": "number",
+          "label": {
+            "en": "Lowest level (%)",
+            "fr": "Niveau le plus bas (%)",
+            "de": "Niedrigster Stand (%)",
+            "es": "Nivel más bajo (%)"
+          }
+        },
+        {
+          "key": "pages",
+          "type": "number",
+          "label": {
+            "en": "Pages printed",
+            "fr": "Pages imprimées",
+            "de": "Gedruckte Seiten",
+            "es": "Páginas impresas"
+          }
+        }
+      ]
+    },
+    {
+      "key": "print_text",
+      "label": {
+        "en": "Print a text",
+        "fr": "Imprimer un texte",
+        "de": "Text drucken",
+        "es": "Imprimir un texto"
+      },
+      "description": {
+        "en": "Print a text on a printer: a shopping list, a reminder...",
+        "fr": "Imprime un texte : une liste de courses, un rappel...",
+        "de": "Druckt einen Text: eine Einkaufsliste, eine Erinnerung...",
+        "es": "Imprime un texto: una lista de la compra, un recordatorio..."
+      },
+      "timeout_seconds": 45,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "required": true
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": { "en": "Title", "fr": "Titre", "de": "Titel", "es": "Título" }
+        },
+        {
+          "key": "text",
+          "type": "string",
+          "label": { "en": "Text", "fr": "Texte", "de": "Text", "es": "Texto" },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "printed",
+          "type": "boolean",
+          "label": { "en": "Printed", "fr": "Imprimé", "de": "Gedruckt", "es": "Impreso" }
+        },
+        {
+          "key": "job_id",
+          "type": "number",
+          "label": {
+            "en": "Print job number",
+            "fr": "Numéro de tâche",
+            "de": "Auftragsnummer",
+            "es": "Número de trabajo"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "printer",
+      "label": {
+        "en": "HP printer",
+        "fr": "Imprimante HP",
+        "de": "HP-Drucker",
+        "es": "Impresora HP"
+      },
+      "description": {
+        "en": "Ink or toner levels, state and alerts of one printer.",
+        "fr": "Niveaux d'encre ou de toner, état et alertes d'une imprimante.",
+        "de": "Tinten- oder Tonerstände, Zustand und Warnungen eines Druckers.",
+        "es": "Niveles de tinta o tóner, estado y alertas de una impresora."
+      },
+      "icon": "printer",
+      "settings": [
+        {
+          "key": "printer",
+          "type": "select",
+          "source": "devices",
+          "label": { "en": "Printer", "fr": "Imprimante", "de": "Drucker", "es": "Impresora" },
+          "required": true
+        }
+      ],
+      "action_timeout_seconds": 45
+    },
+    {
+      "key": "printers_overview",
+      "label": {
+        "en": "HP printers",
+        "fr": "Imprimantes HP",
+        "de": "HP-Drucker (alle)",
+        "es": "Impresoras HP"
+      },
+      "description": {
+        "en": "Every printer on one line: state and lowest level.",
+        "fr": "Chaque imprimante sur une ligne : état et niveau le plus bas.",
+        "de": "Jeder Drucker in einer Zeile: Zustand und niedrigster Stand.",
+        "es": "Cada impresora en una línea: estado y nivel más bajo."
+      },
+      "icon": "printer",
+      "action_timeout_seconds": 45
+    }
+  ]
+}
