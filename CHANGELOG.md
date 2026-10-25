@@ -10,6 +10,17 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Added
+
+- Catalog search keywords (HP printer ranges, IPP, AirPrint, cartridge).
+
+### Changed
+
+- SDK `@gladysassistant/integration-sdk` updated to 0.16.0.
+- Gladys 5.3.0 or later is now required (manifest `keywords` field).
+- CI: the pull-request store check runs with `--skip-image-check`; the Release
+  workflow runs the full check, image included, once the image is published.
+
 ## [1.0.2] - 2026-10-23
 
 - Maintenance release, no functional change.
