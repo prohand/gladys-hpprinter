@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-25
+
 ### Added
 
 - Catalog search keywords (HP printer ranges, IPP, AirPrint, cartridge).
@@ -53,6 +55,7 @@ the notes of the version's GitHub Release.
   Releases, Dependabot.
 - `SECURITY.md` and `CLAUDE.md`.
 
-[Unreleased]: https://github.com/prohand/gladys-hpprinter/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/prohand/gladys-hpprinter/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/prohand/gladys-hpprinter/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/prohand/gladys-hpprinter/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/prohand/gladys-hpprinter/releases/tag/v1.0.1
