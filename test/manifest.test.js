@@ -94,9 +94,37 @@ test('version, image tag and package.json agree', () => {
   );
 });
 
+/** True when the `gladys_version` minimum is at least `major.minor.0`. */
+function floorAtLeast(major, minor) {
+  const [floorMajor, floorMinor] = manifest.gladys_version
+    .replace(/^>=/, '')
+    .split('.')
+    .map(Number);
+  return floorMajor > major || (floorMajor === major && floorMinor >= minor);
+}
+
 test('the Gladys floor covers the widgets and scene declarations', () => {
-  const [major, minor] = manifest.gladys_version.replace(/^>=/, '').split('.').map(Number);
-  assert.ok(major > 5 || (major === 5 && minor >= 1), `got ${manifest.gladys_version}`);
+  assert.ok(floorAtLeast(5, 1), `got ${manifest.gladys_version}`);
+});
+
+test('the Gladys floor covers keywords, countries and music (5.3.0)', () => {
+  if (manifest.keywords || manifest.countries || manifest.music) {
+    assert.ok(floorAtLeast(5, 3), `got ${manifest.gladys_version}`);
+  }
+});
+
+test('keywords: 1 to 10 unique search terms of 2 to 30 characters', () => {
+  assert.ok(Array.isArray(manifest.keywords));
+  assert.ok(manifest.keywords.length >= 1 && manifest.keywords.length <= 10);
+  const normalized = manifest.keywords.map((keyword) => keyword.trim().toLowerCase());
+  assert.equal(new Set(normalized).size, normalized.length, 'keywords must be unique');
+  for (const keyword of normalized) {
+    assert.ok(keyword.length >= 2 && keyword.length <= 30, keyword);
+  }
+});
+
+test('no countries: HP printers are sold worldwide', () => {
+  assert.equal(manifest.countries, undefined);
 });
 
 test('transport tag: local only (the printer is read on the LAN, no HP cloud)', () => {
@@ -117,7 +145,12 @@ test('categories stay inside the store vocabulary', () => {
     'notifications',
     'assistants',
     'services',
+    'transport',
+    'vehicles',
+    'servers',
+    'leisure',
   ];
+  assert.equal(new Set(manifest.categories).size, manifest.categories.length);
   assert.ok(manifest.categories.length >= 1 && manifest.categories.length <= 3);
   for (const category of manifest.categories) {
     assert.ok(vocabulary.includes(category), category);

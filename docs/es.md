@@ -24,7 +24,7 @@ a Gladys.
 
 ## Lo que necesita
 
-- Gladys Assistant **5.1 o posterior**.
+- Gladys Assistant **5.3 o posterior**.
 - Una impresora HP conectada a la red (Wi-Fi o Ethernet), en la misma red que
   Gladys.
 - **IPP** activado en la impresora. Viene activado de fábrica en casi todas las

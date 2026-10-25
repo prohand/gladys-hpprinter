@@ -70,7 +70,10 @@ index>`. Trigger, action, widget, config and problem keys are stored by users: n
 `test/manifest.test.js` keeps `gladys-assistant-integration.json` in sync with the code: defaults
 vs `DEFAULT_CONFIG`, every action / scene action / widget registered, triggers and their
 filters vs the events `fleet.js` fires, problem and colour options vs `PROBLEMS` /
-`COLOR_LABELS`, and **every text in en, fr, de and es**.
+`COLOR_LABELS`, and **every text in en, fr, de and es**. It also pins the store couplings:
+`gladys_version >= 5.3.0` (required by `keywords`; 5.1.0 already for the scene and widget fields),
+`keywords` 1–10 unique terms of 2–30 characters, no `countries` (HP printers are sold
+worldwide), `categories` within the store vocabulary.
 
 ## Testing
 

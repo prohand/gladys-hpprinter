@@ -2,8 +2,8 @@
 
 External integration connecting [Gladys Assistant](https://gladysassistant.com)
 to **HP printers** on the local network: ink and toner levels, state, alerts
-(out of paper, paper jam, door open…) and pages printed. Gladys 5.1+ adds scene
-triggers, scene actions and two dashboard widgets.
+(out of paper, paper jam, door open…) and pages printed, with scene triggers,
+scene actions and two dashboard widgets. Requires Gladys 5.3.0 or later.
 
 Built on the official
 [JavaScript integration template](https://github.com/GladysAssistant/integration-template-js)

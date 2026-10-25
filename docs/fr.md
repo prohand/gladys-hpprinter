@@ -24,7 +24,7 @@ installer à côté de Gladys.
 
 ## Ce qu'il faut
 
-- Gladys Assistant **5.1 ou plus récent**.
+- Gladys Assistant **5.3 ou plus récent**.
 - Une imprimante HP branchée au réseau (Wi-Fi ou Ethernet), sur le même réseau
   que Gladys.
 - **IPP** activé sur l'imprimante. Il est actif par défaut sur presque toutes
